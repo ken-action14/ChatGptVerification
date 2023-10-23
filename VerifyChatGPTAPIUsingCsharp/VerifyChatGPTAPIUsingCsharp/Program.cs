@@ -4,8 +4,6 @@ class Program
     static async Task Main(string[] args)
     {
         var openAIAPIService = new OpenAIAPIService();
-        // await openAIAPIService.ListModelAsync();
-        //await openAIAPIService.RetrieveModelAsync("gpt-3.5-turbo");
         Console.WriteLine("質問を入力してください。");
         var systemPrompt = "あなたは優秀なアシスタントです。";
         var firstQuestion = Console.ReadLine();
@@ -15,7 +13,7 @@ class Program
         }
         else
         {
-            await openAIAPIService.CreateCompletionAsync(systemPrompt, firstQuestion);
+            await openAIAPIService.ChatGptConvesationOutputAsync(systemPrompt, firstQuestion);
         }
     }
 }

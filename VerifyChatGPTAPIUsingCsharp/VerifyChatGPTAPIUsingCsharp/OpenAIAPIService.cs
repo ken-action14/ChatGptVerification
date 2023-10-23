@@ -12,7 +12,7 @@ namespace VerifyChatGPTAPIUsingCsharp
     /// </summary>
     public sealed class OpenAIAPIService
     {
-        // APIKeyを記載する
+        // APIKeyを設定する（外部へは公開しない）
         const string APIKey = "";　
         private readonly OpenAIService _openAIService;
         public OpenAIAPIService()
@@ -23,37 +23,37 @@ namespace VerifyChatGPTAPIUsingCsharp
             });
         }
 
-        #region ListModelAsync
+        #region ListModelOutputAsync
         /// <summary>
-        /// モデル一覧を取得します
+        /// モデル一覧をコンソールに出力します。
         /// </summary>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public async ValueTask ListModelAsync(CancellationToken cancellationToken = default)
+        public async ValueTask ListModelOutputAsync(CancellationToken cancellationToken = default)
         {
             var response = await _openAIService.Models.ListModel(cancellationToken);
             if (!response.Successful)
             {
-                Console.WriteLine($"Error:{response.Error?.Message}");
+                Console.WriteLine($"エラーメッセージ:{response.Error?.Message}");
             }
             var ids = response.Models.Select(x => x.Id).OrderBy(static x => x);
             Console.WriteLine(string.Join("\n", ids));
         }
         #endregion
 
-        #region RetrieveModelAsync
+        #region RetrieveModelOutputAsync
         /// <summary>
         /// モデルを取得します。
         /// </summary>
         /// <param name="model">モデル名</param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public async ValueTask RetrieveModelAsync(string model, CancellationToken cancellationToken = default)
+        public async ValueTask RetrieveModelOutputAsync(string model, CancellationToken cancellationToken = default)
         {
             var response = await _openAIService.Models.RetrieveModel(model, cancellationToken);
             if (!response.Successful)
             {
-                Console.WriteLine($"Error:{response.Error?.Message}");
+                Console.WriteLine($"エラーメッセージ:{response.Error?.Message}");
             }
 
             var options = JsonSerializerOptionsProvider.Default;
@@ -62,7 +62,7 @@ namespace VerifyChatGPTAPIUsingCsharp
         }
         #endregion
 
-        #region CreateCompletionAsync
+        #region ChatGptConvesationOutputAsync
         /// <summary>
         /// ChatGptから会話形式で質問の回答を受け取ります。
         /// </summary>
@@ -71,7 +71,7 @@ namespace VerifyChatGPTAPIUsingCsharp
         /// <param name="messages">チャットのメッセージ履歴</param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public async ValueTask CreateCompletionAsync(string systemPrompt, string question, IList<ChatMessage>? messages = null, CancellationToken cancellationToken = default)
+        public async ValueTask ChatGptConvesationOutputAsync(string systemPrompt, string question, IList<ChatMessage>? messages = null, CancellationToken cancellationToken = default)
         {
             messages ??= new List<ChatMessage>
             {
@@ -89,7 +89,7 @@ namespace VerifyChatGPTAPIUsingCsharp
 
             if (!response.Successful)
             {
-                Console.WriteLine($"Error:{response.Error?.Message}");
+                Console.WriteLine($"エラーメッセージ:{response.Error?.Message}");
             }
 
             var choice = response.Choices.First();
@@ -103,7 +103,7 @@ namespace VerifyChatGPTAPIUsingCsharp
             messages.Add(ChatMessage.FromUser(input));
 
             // 会話形式にするため、再帰的に呼び出します。
-            await CreateCompletionAsync(systemPrompt, question, messages, cancellationToken);
+            await ChatGptConvesationOutputAsync(systemPrompt, question, messages, cancellationToken);
         }
         #endregion
     }
