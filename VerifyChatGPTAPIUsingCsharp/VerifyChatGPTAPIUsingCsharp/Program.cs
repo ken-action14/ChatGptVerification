@@ -11,7 +11,7 @@ class Program
         var firstQuestion = Console.ReadLine();
         if (string.IsNullOrEmpty(firstQuestion))
         {
-            Console.WriteLine("質問が入力されなかったので、処理を修正します。");
+            Console.WriteLine("質問が入力されなかったので、処理を終了します。");
         }
         else
         {
