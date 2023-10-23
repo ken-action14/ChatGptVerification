@@ -12,7 +12,7 @@ namespace VerifyChatGPTAPIUsingCsharp
     /// </summary>
     public sealed class OpenAIAPIService
     {
-        // APIを記載する
+        // APIKeyを記載する
         const string APIKey = "";　
         private readonly OpenAIService _openAIService;
         public OpenAIAPIService()
